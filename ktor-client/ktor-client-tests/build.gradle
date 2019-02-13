@@ -10,7 +10,6 @@ class BackgroundJavaProcess extends JavaExec {
     public void exec() {
         thread.start()
         Thread.sleep(1000)
-        println "Done"
     }
 }
 
