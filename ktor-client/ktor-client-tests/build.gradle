@@ -19,6 +19,8 @@ kotlin.sourceSets {
         api project(':ktor-client:ktor-client-tests:ktor-client-tests-dispatcher')
         api project(':ktor-client:ktor-client-features:ktor-client-json')
     }
+    commonTest.dependencies {
+    }
     jvmMain.dependencies {
         api project(':ktor-server:ktor-server-jetty')
         api project(':ktor-server:ktor-server-netty')
