@@ -65,7 +65,7 @@ class Logging(
         contentHeaders: Headers? = null
     ) {
         with(logger) {
-            log("REQUEST HEADERS")
+            log("COMMON HEADERS")
             requestHeaders.forEach { (key, values) ->
                 log("-> $key: ${values.joinToString("; ")}")
             }
