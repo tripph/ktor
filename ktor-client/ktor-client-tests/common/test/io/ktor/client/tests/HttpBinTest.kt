@@ -22,20 +22,19 @@ data class HttpBinResponse(
 class HttpBinTest {
 
     @Test
-    fun getTest() = clientsTest {
+    fun testGet() = clientsTest {
         config {
             testConfiguration()
         }
 
         test { client ->
-            val response = client.get<HttpBinResponse>("http://httpbin.org/get")
+            val response = client.get<HttpBinResponse>("https://httpbin.org/get")
 
-            assertEquals("http://httpbin.org/get", response.url)
+            assertEquals("https://httpbin.org/get", response.url)
             assertEquals(emptyMap(), response.args)
 
             with(response.headers) {
                 assertEquals("application/json", get("Accept"))
-                assertEquals("close", get("Connection"))
                 assertEquals("httpbin.org", get("Host"))
             }
 
@@ -43,34 +42,33 @@ class HttpBinTest {
     }
 
     @Test
-    fun postTest() = clientsTest {
+    fun testPost() = clientsTest {
         config {
             testConfiguration()
         }
 
         test { client ->
-            val response = client.post<HttpBinResponse>("http://httpbin.org/post") {
+            val response = client.post<HttpBinResponse>("https://httpbin.org/post") {
                 body = "Hello, bin!"
             }
 
-            assertEquals("http://httpbin.org/post", response.url)
+            assertEquals("https://httpbin.org/post", response.url)
             assertEquals(emptyMap(), response.args)
 
             with(response.headers) {
                 assertEquals("text/plain; charset=UTF-8", get("Content-Type"))
                 assertEquals("application/json", get("Accept"))
                 assertEquals("11", get("Content-Length"))
-                assertEquals("close", get("Connection"))
                 assertEquals("httpbin.org", get("Host"))
             }
         }
     }
 
     @Test
-    fun bytesTest() = clientTest {
+    fun testBytes() = clientTest {
         test { client ->
             val size = 100 * 1024
-            val response = client.get<HttpResponse>("http://httpbin.org/bytes/$size").use {
+            val response = client.get<HttpResponse>("https://httpbin.org/bytes/$size").use {
                 it.readBytes()
             }
             assertEquals(size, response.size)

@@ -11,7 +11,7 @@ class CommonLoggingTest {
 
     @Test
     fun testLogRequestWithException() = clientTest(MockEngine {
-        error("BAD REQUEST")
+        throw CustomError("BAD REQUEST")
     }) {
         val testLogger = TestLogger()
 
@@ -26,7 +26,7 @@ class CommonLoggingTest {
             var failed = false
             try {
                 client.get<String>()
-            } catch (_: IllegalStateException) {
+            } catch (_: Throwable) {
                 failed = true
             }
 
@@ -42,7 +42,7 @@ CONTENT HEADERS
 BODY Content-Type: null
 BODY START
 BODY END
-REQUEST http://localhost/ failed with exception: java.lang.IllegalStateException: BAD REQUEST
+REQUEST http://localhost/ failed with exception: io.ktor.client.features.logging.CustomError: BAD REQUEST
 
                 """.trimIndent(),
                 testLogger.dump()
@@ -59,7 +59,7 @@ REQUEST http://localhost/ failed with exception: java.lang.IllegalStateException
         config {
             install("BadInterceptor") {
                 responsePipeline.intercept(HttpResponsePipeline.Parse) {
-                    error("PARSE ERROR")
+                    throw CustomError("PARSE ERROR")
                 }
             }
 
@@ -89,7 +89,7 @@ CONTENT HEADERS
 BODY Content-Type: null
 BODY START
 BODY END
-RESPONSE http://localhost/ failed with exception: java.lang.IllegalStateException: PARSE ERROR
+RESPONSE http://localhost/ failed with exception: io.ktor.client.features.logging.CustomError: PARSE ERROR
 
                 """.trimIndent(),
                 testLogger.dump()
@@ -97,3 +97,5 @@ RESPONSE http://localhost/ failed with exception: java.lang.IllegalStateExceptio
         }
     }
 }
+
+internal class CustomError(override val message: String): Throwable()
